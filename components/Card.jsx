@@ -32,21 +32,25 @@ const Card = ({data, navigation, setWeather}) => {
   const handleDelete = async cityToDelete => {
     try {
       const storedCity = await AsyncStorage.getItem('userCity');
+
+      if (storedCity === null) {
+        return;
+      }
+
       const cityList = storedCity.split(',');
+      const lowercaseCityToDelete = cityToDelete.trim().toLowerCase();
 
-      // Create a regular expression for matching
-      const regex = new RegExp(
-        cityToDelete.trim().replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'),
-        'i',
+      const updatedCityList = cityList.filter(
+        city => city.trim().toLowerCase() !== lowercaseCityToDelete,
       );
-
-      const updatedCityList = cityList.filter(city => regex.test(city));
 
       const joinCity = updatedCityList.join(',');
       await AsyncStorage.setItem('userCity', joinCity);
 
       setWeather(prevWeather =>
-        prevWeather.filter(item => !regex.test(item.name)),
+        prevWeather.filter(
+          item => item.name.toLowerCase() !== lowercaseCityToDelete,
+        ),
       );
     } catch (error) {
       console.log('Error' + error);

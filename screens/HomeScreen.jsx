@@ -51,7 +51,7 @@ export default function HomeScreen({navigation}) {
         return;
       }
       const cityList = storedCity.split(',');
-      console.log(cityList);
+      // console.log(cityList);
       cityList.forEach(city => {
         fetchWeatherAPI(city);
       });
