@@ -63,11 +63,18 @@ export default function HomeScreen({navigation}) {
   const storeCity = async city => {
     try {
       const storedCity = await AsyncStorage.getItem('userCity');
-      if (storedCity === city) {
+      if (storedCity.includes(city)) {
         return;
       }
-      let cityList = storedCity + ',' + city;
-      await AsyncStorage.setItem('userCity', cityList);
+
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`,
+      );
+      if (res.status == 200) {
+        const data = await res.json();
+        let cityList = storedCity + ',' + data.name;
+        await AsyncStorage.setItem('userCity', cityList);
+      }
     } catch (error) {
       console.error('Error saving city data to AsyncStorage:', error);
     }
