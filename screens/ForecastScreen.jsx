@@ -82,9 +82,6 @@ const ForecastScreen = ({route, navigation}) => {
 export default ForecastScreen;
 
 const styles = StyleSheet.create({
-  // forecastContainer: {
-  //   // Other styles...
-  // },
   wrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
