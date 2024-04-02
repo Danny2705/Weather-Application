@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: 'start',
     alignItems: 'center',
     position: 'absolute',
-    top: 280,
+    top: 240,
   },
   dayForecast: {
     paddingLeft: 35,
