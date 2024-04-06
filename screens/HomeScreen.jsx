@@ -63,7 +63,7 @@ export default function HomeScreen({navigation}) {
   const storeCity = async city => {
     try {
       const storedCity = await AsyncStorage.getItem('userCity');
-      if (storedCity.includes(city)) {
+      if (storedCity !== null && storedCity.includes(city)) {
         return;
       }
 
