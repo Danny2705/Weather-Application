@@ -7,8 +7,12 @@ import {
   View,
   ActivityIndicator,
   StatusBar,
+  TouchableOpacity,
+  Button,
 } from 'react-native';
 
+import GetLocation from 'react-native-get-location';
+import {request, PERMISSIONS} from 'react-native-permissions';
 import Card from '../components/Card';
 import SearchCat from '../asset/image/searchCat.png';
 import CatLoading from '../asset/image/catLoading.png';
@@ -21,6 +25,7 @@ export default function HomeScreen({navigation}) {
   const [weather, setWeather] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [cityName, setCityName] = useState('');
+  const [location, setLocation] = useState(null);
 
   const fetchWeatherAPI = async city => {
     try {
@@ -39,6 +44,57 @@ export default function HomeScreen({navigation}) {
     }
   };
 
+  const currentUserLocation = () => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 60000,
+      rationale: {
+        title: 'Location permission',
+        message: 'The app needs the permission to request your location.',
+        buttonPositive: 'Ok',
+      },
+    })
+      .then(location => {
+        console.log(location);
+        setLocation(location);
+        currentCity();
+      })
+      .catch(error => {
+        const {code, message} = error;
+        console.warn(code, message);
+        setLocation('We are unable to get your location at this time');
+      });
+  };
+
+  const currentCity = async () => {
+    try {
+      const city = await fetch(
+        `http://api.openweathermap.org/geo/1.0/reverse?lat=${location.latitude}&lon=${location.longitude}&limit=5&appid=${API_KEY}`,
+      );
+      if (city.status == 200) {
+        const data = await city.json();
+        console.log(data[0].state.toString());
+        setCityName(data[0].state.toString());
+      }
+    } catch (err) {
+      setLocation('We are unable to get any weather information at this time.');
+    }
+  };
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      const permissionStatus = await request(
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      );
+      if (permissionStatus === 'granted') {
+        currentUserLocation();
+      } else {
+        console.warn('Location permission not granted');
+      }
+    };
+    checkPermissions();
+  }, []);
+
   useEffect(() => {
     loadCity();
     fetchWeatherAPI(cityName);
@@ -51,7 +107,7 @@ export default function HomeScreen({navigation}) {
         return;
       }
       const cityList = storedCity.split(',');
-      // console.log(cityList);
+      console.log(cityList);
       cityList.forEach(city => {
         fetchWeatherAPI(city);
       });
@@ -87,7 +143,7 @@ export default function HomeScreen({navigation}) {
         <View style={styles.indicator}>
           <Text style={{fontWeight: 'bold', fontSize: 25}}>Loading....</Text>
           <ActivityIndicator size="large" color="#A24E61" />
-          {/* <Text style={{fontSize: 25}}>Loading...</Text> */}
+          <Text style={{fontSize: 25}}>Loading...</Text>
           <Image source={CatLoading} style={{width: 400, height: 400}} />
         </View>
       </View>
@@ -121,10 +177,16 @@ export default function HomeScreen({navigation}) {
         </View>
       ) : (
         <View style={styles.errorInfo}>
+          <TouchableOpacity>
+            <Button
+              title="Get My Location"
+              style={[styles.button, styles.buttonPressed]}
+              onPress={currentUserLocation}
+            />
+          </TouchableOpacity>
           <Text style={{fontSize: 17, fontWeight: 'bold'}}>
             Type the appropriate city to see the weather...
           </Text>
-
           <Image source={SearchCat} style={{width: 450, height: 450}} />
         </View>
       )}
@@ -153,5 +215,17 @@ const styles = StyleSheet.create({
     padding: 17,
     paddingTop: 50,
     gap: 15,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonPressed: {
+    backgroundColor: '#ccc',
+  },
+  text: {
+    color: 'black',
   },
 });
