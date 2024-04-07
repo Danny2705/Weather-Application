@@ -56,8 +56,8 @@ export default function HomeScreen({navigation}) {
     })
       .then(location => {
         console.log(location);
-        setLocation(location);
-        currentCity();
+        // setLocation(location);
+        // currentCity();
       })
       .catch(error => {
         const {code, message} = error;
