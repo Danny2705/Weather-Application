@@ -24,8 +24,9 @@ const API_KEY = 'e1f0ab9c632fe4e2fb91c68770021520';
 export default function HomeScreen({navigation}) {
   const [weather, setWeather] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const [cityName, setCityName] = useState('');
+  const [cityName, setCityName] = useState(null);
   const [location, setLocation] = useState(null);
+  const [myLocation, setMyLocation] = useState(null);
 
   const fetchWeatherAPI = async city => {
     try {
@@ -37,47 +38,52 @@ export default function HomeScreen({navigation}) {
         const data = await res.json();
         setWeather(prevList => [...prevList, data]);
       }
-
+      console.log(res);
       setLoaded(true);
     } catch (err) {
       console.log('API connection failed');
     }
   };
 
-  const currentUserLocation = () => {
-    GetLocation.getCurrentPosition({
-      enableHighAccuracy: true,
-      timeout: 60000,
-      rationale: {
-        title: 'Location permission',
-        message: 'The app needs the permission to request your location.',
-        buttonPositive: 'Ok',
-      },
-    })
-      .then(location => {
-        console.log(location);
-        // setLocation(location);
-        // currentCity();
-      })
-      .catch(error => {
-        const {code, message} = error;
-        console.warn(code, message);
-        setLocation('We are unable to get your location at this time');
-      });
-  };
-
-  const currentCity = async () => {
+  const currentCity = async myLocation => {
     try {
-      const city = await fetch(
-        `http://api.openweathermap.org/geo/1.0/reverse?lat=${location.latitude}&lon=${location.longitude}&limit=5&appid=${API_KEY}`,
+      console.log(
+        '!!!3',
+        myLocation,
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${myLocation.latitude}&lon=${myLocation.longitude}&limit=5&appid=${API_KEY}`,
       );
-      if (city.status == 200) {
+      const city = await fetch(
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${myLocation.latitude}&lon=${myLocation.longitude}&limit=5&appid=${API_KEY}`,
+      );
+      console.log('city', city);
+      if (city.status === 200) {
         const data = await city.json();
-        console.log(data[0].state.toString());
-        setCityName(data[0].state.toString());
+        console.log('data', data);
+        const val = data[0].name.toString();
+        setCityName(val);
       }
     } catch (err) {
-      setLocation('We are unable to get any weather information at this time.');
+      console.error(err);
+    }
+  };
+
+  const currentUserLocation = async () => {
+    try {
+      const myLocation = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 60000,
+        rationale: {
+          title: 'Location permission',
+          message: 'The app needs the permission to request your location.',
+          buttonPositive: 'Ok',
+        },
+      });
+
+      setMyLocation(myLocation);
+      await currentCity(myLocation);
+    } catch (error) {
+      const {code, message} = error;
+      console.warn(code, message);
     }
   };
 
@@ -177,7 +183,8 @@ export default function HomeScreen({navigation}) {
         </View>
       ) : (
         <View style={styles.errorInfo}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            style={{backgroundColor: '#86ccf0', borderRadius: 8}}>
             <Button
               title="Get My Location"
               style={[styles.button, styles.buttonPressed]}
@@ -223,9 +230,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonPressed: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#cccccc',
   },
   text: {
-    color: 'black',
+    color: 'gray',
   },
 });
