@@ -38,27 +38,21 @@ export default function HomeScreen({navigation}) {
         const data = await res.json();
         setWeather(prevList => [...prevList, data]);
       }
-      console.log(res);
       setLoaded(true);
     } catch (err) {
-      console.log('API connection failed');
+      console.error(err);
     }
   };
 
   const currentCity = async myLocation => {
     try {
-      console.log(
-        '!!!3',
-        myLocation,
-        `https://api.openweathermap.org/geo/1.0/reverse?lat=${myLocation.latitude}&lon=${myLocation.longitude}&limit=5&appid=${API_KEY}`,
-      );
       const city = await fetch(
         `https://api.openweathermap.org/geo/1.0/reverse?lat=${myLocation.latitude}&lon=${myLocation.longitude}&limit=5&appid=${API_KEY}`,
       );
-      console.log('city', city);
+
       if (city.status === 200) {
         const data = await city.json();
-        console.log('data', data);
+
         const val = data[0].name.toString();
         setCityName(val);
       }
@@ -113,7 +107,7 @@ export default function HomeScreen({navigation}) {
         return;
       }
       const cityList = storedCity.split(',');
-      console.log(cityList);
+
       cityList.forEach(city => {
         fetchWeatherAPI(city);
       });
