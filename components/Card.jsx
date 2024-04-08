@@ -81,7 +81,7 @@ const Card = ({data, navigation, setWeather}) => {
       </View>
 
       <View style={styles.rightContainer}>
-        <Text style={{fontSize: 24, color: '#474747'}}>{weather[0].main}</Text>
+        <Text style={{fontSize: 24, color: '#474747',marginTop:16}}>{weather[0].main}</Text>
         <Image source={backgroundImage} style={styles.catShower} />
       </View>
 
@@ -124,16 +124,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#B1E0F8',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 25,
-    paddingRight: 25,
-    height: 170,
-    borderWidth: 1,
-    borderColor: 'white',
-    borderRadius: 20,
-    marginBottom: 10,
+    paddingLeft: 24,
+    paddingRight: 24,
+    height: 168,
+    borderWidth: 3,
+    borderColor: '#afbbc5de',
+    borderRadius: 24,
+    marginBottom: 8,
+    marginTop: 8,
   },
   temp: {
-    fontSize: 50,
+    fontSize: 56,
     fontWeight: 'semibold',
     color: '#474747',
   },
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 10,
+    paddingRight: 8,
   },
   catShower: {
     width: 120,
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   deleteIcon: {
     position: 'absolute',
-    top: 14,
-    right: 10,
+    top: 16,
+    right: 16,
   },
 });
