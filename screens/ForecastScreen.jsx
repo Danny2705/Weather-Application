@@ -53,7 +53,7 @@ const ForecastScreen = ({route, navigation}) => {
           <View>
             <View
               style={{
-                height: 400,
+                height: 360,
                 flexDirection: 'column',
                 alignItems: 'center',
               }}>
@@ -82,13 +82,10 @@ const ForecastScreen = ({route, navigation}) => {
 export default ForecastScreen;
 
 const styles = StyleSheet.create({
-  // forecastContainer: {
-  //   // Other styles...
-  // },
   wrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 17,
+    padding: 8,
   },
   cityName: {
     fontSize: 20,
