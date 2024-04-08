@@ -118,13 +118,17 @@ export default function HomeScreen({navigation}) {
         fetchWeatherAPI(city);
       });
     } catch (error) {
-      console.error('Error loading city data from AsyncStorage:', error);
+      console.error(error);
     }
   };
 
   const storeCity = async city => {
     try {
       const storedCity = await AsyncStorage.getItem('userCity');
+      if (storedCity === null) {
+        await AsyncStorage.setItem('userCity', city);
+        return;
+      }
       if (storedCity.includes(city)) {
         return;
       }
@@ -138,7 +142,7 @@ export default function HomeScreen({navigation}) {
         await AsyncStorage.setItem('userCity', cityList);
       }
     } catch (error) {
-      console.error('Error saving city data to AsyncStorage:', error);
+      console.error(error);
     }
   };
 
