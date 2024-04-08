@@ -12,6 +12,16 @@ import CatLoadingHour from '../asset/image/drizzleCat.png';
 
 const API_KEY = 'e1f0ab9c632fe4e2fb91c68770021520';
 
+const daysOfWeek = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
+
 export default function Daily({navigation, data, backgroundColor}) {
   const {name, timezone} = data;
   const [listHour, setListHour] = useState([]);
@@ -47,6 +57,10 @@ export default function Daily({navigation, data, backgroundColor}) {
           {listHour.map((list, index) => {
             const zone = timezone / 3600;
             const forecastTime = new Date(list.dt * 1000);
+            const dayZone = new Date(list.dt * 1000);
+            dayZone.setHours(dayZone.getUTCHours() + zone);
+            const dayIndex = daysOfWeek[dayZone.getDay()];
+            // console.log(dayIndex);
             let adjustedTime = forecastTime.getUTCHours() + zone;
             if (adjustedTime >= 24) {
               adjustedTime -= 24;
@@ -65,6 +79,7 @@ export default function Daily({navigation, data, backgroundColor}) {
             return (
               <View style={styles.hourContainer} key={index}>
                 <View style={[styles.hourDiv, {backgroundColor}]}>
+                  {/* <Text>{dayIndex}</Text> */}
                   <Text style={{fontSize: 16, fontWeight: 'bold'}}>
                     {formattedForecastTime}
                   </Text>
