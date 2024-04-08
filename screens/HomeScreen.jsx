@@ -7,8 +7,12 @@ import {
   View,
   ActivityIndicator,
   StatusBar,
+  TouchableOpacity,
+  Button,
 } from 'react-native';
 
+import GetLocation from 'react-native-get-location';
+import {request, PERMISSIONS} from 'react-native-permissions';
 import Card from '../components/Card';
 import SearchCat from '../asset/image/searchCat.png';
 import CatLoading from '../asset/image/catLoading.png';
@@ -20,7 +24,9 @@ const API_KEY = 'e1f0ab9c632fe4e2fb91c68770021520';
 export default function HomeScreen({navigation}) {
   const [weather, setWeather] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const [cityName, setCityName] = useState('');
+  const [cityName, setCityName] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [myLocation, setMyLocation] = useState(null);
 
   const fetchWeatherAPI = async city => {
     try {
@@ -32,12 +38,62 @@ export default function HomeScreen({navigation}) {
         const data = await res.json();
         setWeather(prevList => [...prevList, data]);
       }
-
       setLoaded(true);
     } catch (err) {
-      console.log('API connection failed');
+      console.error(err);
     }
   };
+
+  const currentCity = async myLocation => {
+    try {
+      const city = await fetch(
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${myLocation.latitude}&lon=${myLocation.longitude}&limit=5&appid=${API_KEY}`,
+      );
+
+      if (city.status === 200) {
+        const data = await city.json();
+
+        const val = data[0].name.toString();
+        setCityName(val);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const currentUserLocation = async () => {
+    try {
+      const myLocation = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 60000,
+        rationale: {
+          title: 'Location permission',
+          message: 'The app needs the permission to request your location.',
+          buttonPositive: 'Ok',
+        },
+      });
+
+      setMyLocation(myLocation);
+      await currentCity(myLocation);
+    } catch (error) {
+      const {code, message} = error;
+      console.warn(code, message);
+    }
+  };
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      const permissionStatus = await request(
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      );
+      if (permissionStatus === 'granted') {
+        currentUserLocation();
+      } else {
+        console.warn('Location permission not granted');
+      }
+    };
+    checkPermissions();
+  }, []);
 
   useEffect(() => {
     loadCity();
@@ -51,19 +107,23 @@ export default function HomeScreen({navigation}) {
         return;
       }
       const cityList = storedCity.split(',');
-      // console.log(cityList);
+
       cityList.forEach(city => {
         fetchWeatherAPI(city);
       });
     } catch (error) {
-      console.error('Error loading city data from AsyncStorage:', error);
+      console.error(error);
     }
   };
 
   const storeCity = async city => {
     try {
       const storedCity = await AsyncStorage.getItem('userCity');
-      if (storedCity !== null && storedCity.includes(city)) {
+      if (storedCity === null) {
+        await AsyncStorage.setItem('userCity', city);
+        return;
+      }
+      if (storedCity.includes(city)) {
         return;
       }
 
@@ -76,7 +136,7 @@ export default function HomeScreen({navigation}) {
         await AsyncStorage.setItem('userCity', cityList);
       }
     } catch (error) {
-      console.error('Error saving city data to AsyncStorage:', error);
+      console.error(error);
     }
   };
 
@@ -87,7 +147,7 @@ export default function HomeScreen({navigation}) {
         <View style={styles.indicator}>
           <Text style={{fontWeight: 'bold', fontSize: 25}}>Loading....</Text>
           <ActivityIndicator size="large" color="#A24E61" />
-          {/* <Text style={{fontSize: 25}}>Loading...</Text> */}
+          <Text style={{fontSize: 25}}>Loading...</Text>
           <Image source={CatLoading} style={{width: 400, height: 400}} />
         </View>
       </View>
@@ -121,10 +181,17 @@ export default function HomeScreen({navigation}) {
         </View>
       ) : (
         <View style={styles.errorInfo}>
+          <TouchableOpacity
+            style={{backgroundColor: '#86ccf0', borderRadius: 8}}>
+            <Button
+              title="Get My Location"
+              style={[styles.button, styles.buttonPressed]}
+              onPress={currentUserLocation}
+            />
+          </TouchableOpacity>
           <Text style={{fontSize: 17, fontWeight: 'bold'}}>
             Type the appropriate city to see the weather...
           </Text>
-
           <Image source={SearchCat} style={{width: 450, height: 450}} />
         </View>
       )}
@@ -153,5 +220,17 @@ const styles = StyleSheet.create({
     padding: 17,
     paddingTop: 50,
     gap: 15,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonPressed: {
+    backgroundColor: '#cccccc',
+  },
+  text: {
+    color: 'gray',
   },
 });
