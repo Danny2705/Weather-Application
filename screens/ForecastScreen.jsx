@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 17,
+    padding: 8,
   },
   cityName: {
     fontSize: 20,

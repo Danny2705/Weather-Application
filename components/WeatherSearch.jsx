@@ -45,6 +45,7 @@ export default function WeatherSearch({
 
 const styles = StyleSheet.create({
   h1: {
+    marginTop: 16,
     padding: 17,
     paddingBottom: 5,
     fontSize: 28,
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: 'semibold',
     color: '#000',
   },

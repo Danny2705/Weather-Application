@@ -50,59 +50,66 @@ export default function Daily({navigation, data, backgroundColor}) {
 
   return (
     <View style={styles.weatherContent}>
-      <Text style={styles.dayTitle}>Today</Text>
-
-      {listHour.length > 0 ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {listHour.map((list, index) => {
-            const zone = timezone / 3600;
-            const forecastTime = new Date(list.dt * 1000);
-            const dayZone = new Date(list.dt * 1000);
-            dayZone.setHours(dayZone.getUTCHours() + zone);
-            const dayIndex = daysOfWeek[dayZone.getDay()];
-            // console.log(dayIndex);
-            let adjustedTime = forecastTime.getUTCHours() + zone;
-            if (adjustedTime >= 24) {
-              adjustedTime -= 24;
-            }
-
-            const period = adjustedTime >= 0 && adjustedTime < 12 ? 'AM' : 'PM';
-
-            const formattedForecastTime =
-              (adjustedTime >= 0 ? adjustedTime : 12 + adjustedTime) +
-              ':' +
-              (forecastTime.getMinutes() < 10 ? '0' : '') +
-              forecastTime.getMinutes() +
-              ' ' +
-              period;
-
-            return (
-              <View style={styles.hourContainer} key={index}>
-                <View style={[styles.hourDiv, {backgroundColor}]}>
-                  {/* <Text>{dayIndex}</Text> */}
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                    {formattedForecastTime}
-                  </Text>
-                  <Image
-                    source={{
-                      uri: `https://openweathermap.org/img/wn/${list.weather[0].icon}@2x.png`,
-                    }}
-                    style={{width: 60, height: 80}}
-                  />
-                  <Text style={{fontSize: 14}}>
-                    {Math.round(list.main.temp)}°C
-                  </Text>
-                </View>
+      <Text style={styles.dayTitle}>{title}</Text>
+      <FlatList
+        data={listHour}
+        keyExtractor={hour => hour.dt}
+        renderItem={({item: hour}) => {
+          return (
+            <View style={styles.hourContainer}>
+              <View style={[styles.hourDiv, {backgroundColor}]}>
+                <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+                  {DateTime.fromSeconds(hour.dt)
+                    .setZone(offsetMinsToZoneStr(timezone / 60))
+                    .toFormat('h:mm a')}
+                </Text>
+                <Image
+                  source={{
+                    uri: `https://openweathermap.org/img/wn/${hour.weather[0].icon}@2x.png`,
+                  }}
+                  style={{width: 60, height: 80}}
+                />
+                <Text style={{fontSize: 14}}>
+                  {Math.round(hour.main.temp)}°C
+                </Text>
               </View>
-            );
-          })}
-        </ScrollView>
-      ) : (
-        <View style={styles.loadingHour}>
-          <Image source={CatLoadingHour} style={{width: 200, height: 180}} />
-          <Text style={{fontSize: 22, fontWeight: 'bold'}}>Loading...</Text>
-        </View>
-      )}
+            </View>
+          );
+        }}
+        horizontal
+        showsHorizontalScrollIndicator
+        ListEmptyComponent={
+          <View style={styles.loadingHour}>
+            <Image source={CatLoadingHour} style={{width: 200, height: 180}} />
+            <Text style={{fontSize: 22, fontWeight: 'bold'}}>Loading...</Text>
+          </View>
+        }
+        onViewableItemsChanged={info => {
+          const item = info.viewableItems[0]?.item;
+          if (!item) {
+            return;
+          }
+
+          const offsetStr = offsetMinsToZoneStr(timezone / 60);
+          const nowLocal = DateTime.now().setZone(offsetStr);
+          const forecastLocal = DateTime.fromSeconds(item.dt).setZone(
+            offsetStr,
+          );
+
+          const daysDiff = Math.round(
+            Math.abs(forecastLocal.diff(nowLocal).as('days')),
+          );
+          if (daysDiff === 0) {
+            setTitle('Today');
+          } else if (daysDiff === 1) {
+            setTitle('Tomorrow');
+          } else if (daysDiff === 2) {
+            setTitle('Day After Tomorrow');
+          } else {
+            setTitle(`Today Plus ${daysDiff} Days`);
+          }
+        }}
+      />
 
       <TouchableOpacity
         onPress={() => navigation.goBack()}

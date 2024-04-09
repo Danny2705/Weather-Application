@@ -35,9 +35,60 @@ export default function HomeScreen({navigation}) {
 
       setLoaded(true);
     } catch (err) {
-      console.log('API connection failed');
+      console.error(err);
     }
   };
+
+  const currentCity = async myLocation => {
+    try {
+      const city = await fetch(
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${myLocation.latitude}&lon=${myLocation.longitude}&limit=5&appid=${API_KEY}`,
+      );
+
+      if (city.status === 200) {
+        const data = await city.json();
+
+        const val = data[0].name.toString();
+        setCityName(val);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const currentUserLocation = async () => {
+    try {
+      const myLocation = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 60000,
+        rationale: {
+          title: 'Location permission',
+          message: 'The app needs the permission to request your location.',
+          buttonPositive: 'Ok',
+        },
+      });
+
+      setMyLocation(myLocation);
+      await currentCity(myLocation);
+    } catch (error) {
+      const {code, message} = error;
+      console.warn(code, message);
+    }
+  };
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      const permissionStatus = await request(
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      );
+      if (permissionStatus === 'granted') {
+        currentUserLocation();
+      } else {
+        console.warn('Location permission not granted');
+      }
+    };
+    checkPermissions();
+  }, []);
 
   useEffect(() => {
     loadCity();
@@ -153,5 +204,17 @@ const styles = StyleSheet.create({
     padding: 17,
     paddingTop: 50,
     gap: 15,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonPressed: {
+    backgroundColor: '#cccccc',
+  },
+  text: {
+    color: 'gray',
   },
 });
