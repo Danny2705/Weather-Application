@@ -28,7 +28,7 @@ const ForecastScreen = ({route, navigation}) => {
     year: 'numeric',
   });
   return (
-    <ScrollView>
+    <ScrollView style={backgroundColor.color}>
       <StatusBar
         barStyle="dark-content"
         backgroundColor={backgroundColor.color}
@@ -41,7 +41,7 @@ const ForecastScreen = ({route, navigation}) => {
           ]}>
           <View style={styles.wrapper}>
             <View>
-              <Text style={styles.cityName}>{currentDate}</Text>
+              <Text style={styles.currentDate}>{currentDate}</Text>
               <Text style={styles.cityName}>
                 {data.name}, {data.sys.country}
               </Text>
@@ -67,7 +67,7 @@ const ForecastScreen = ({route, navigation}) => {
           </View>
         </View>
 
-        <View style={styles.dailyContainer}>
+        <View>
           <Daily
             navigation={navigation}
             data={data}
@@ -88,9 +88,16 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 8,
+    paddingTop: 48,
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingBottom: 24,
   },
   cityName: {
+    fontSize: 20,
+    color: '#474747',
+  },
+  currentDate: {
     fontSize: 20,
     color: '#474747',
   },
@@ -99,23 +106,11 @@ const styles = StyleSheet.create({
     color: '#474747',
     fontWeight: 'semibold',
   },
-  // catShower: {
-  //   width: 400,
-  //   height: 340,
-  // },
   cloud: {
-    // position: 'absolute',
-    // top: '50%',
-    // left: 0,
-    // width: '100%',
-    // opacity: 0.5,
     width: '100%',
     height: '100%',
     position: 'absolute',
     opacity: 0.5,
     top: '50%',
-  },
-  dailyContainer: {
-    // marginTop: 10,
   },
 });

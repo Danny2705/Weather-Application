@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Image,
   StatusBar,
@@ -21,14 +21,13 @@ export default function WeatherSearch({
     storeCity(cityName);
     setCityName('');
   };
+
   return (
     <View>
       <StatusBar barStyle="dark-content" backgroundColor="#CDECFC" />
       <Text style={styles.h1}>Location</Text>
       <View style={{paddingLeft: 17, paddingRight: 17}}>
-        <TouchableOpacity
-          style={styles.searchContainer}
-          onPress={() => handleSearch(cityName)}>
+        <TouchableOpacity style={styles.searchContainer}>
           <Image source={SearchIcon} style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
@@ -36,6 +35,12 @@ export default function WeatherSearch({
             placeholderTextColor="#8C8C8C"
             value={cityName}
             onChangeText={text => setCityName(text)}
+            // Render after user hits enter!!!!
+            onSubmitEditing={e => {
+              const cleanText = e.nativeEvent.text.trim();
+              setCityName(cleanText);
+              handleSearch(cleanText);
+            }}
           />
         </TouchableOpacity>
       </View>
@@ -45,31 +50,33 @@ export default function WeatherSearch({
 
 const styles = StyleSheet.create({
   h1: {
-    marginTop: 16,
-    padding: 17,
-    paddingBottom: 5,
-    fontSize: 28,
+    marginTop: 48,
+    padding: 16,
+    paddingBottom: 8,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#474747',
   },
   searchContainer: {
     position: 'relative',
-    marginTop: 7,
+    marginTop: 8,
     backgroundColor: '#F5F5F5',
-    borderRadius: 30,
+    borderRadius: 32,
     flexDirection: 'row',
     alignItems: 'center',
   },
   searchIcon: {
-    width: 24,
-    height: 24,
+    width: 16,
+    height: 16,
     marginRight: 16,
-    marginLeft: 20,
+    marginLeft: 16,
   },
   searchInput: {
     flex: 1,
     fontSize: 24,
-    fontWeight: 'semibold',
-    color: '#000',
+    paddingTop: 8,
+    paddingBottom: 8,
+    fontWeight: 'bold',
+    color: '#474747',
   },
 });
