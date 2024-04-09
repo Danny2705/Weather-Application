@@ -70,7 +70,7 @@ export default function Daily({navigation, data, backgroundColor}) {
                   }}
                   style={{width: 60, height: 80}}
                 />
-                <Text style={{fontSize: 14}}>
+                <Text style={{fontSize: 16}}>
                   {Math.round(hour.main.temp)}°C
                 </Text>
               </View>

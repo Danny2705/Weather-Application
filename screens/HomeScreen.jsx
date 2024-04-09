@@ -55,6 +55,7 @@ export default function HomeScreen({navigation}) {
 
         const val = data[0].name.toString();
         setCityName(val);
+        fetchWeatherAPI(val);
       }
     } catch (err) {
       console.error(err);
@@ -158,7 +159,6 @@ export default function HomeScreen({navigation}) {
     <ScrollView style={styles.container}>
       <WeatherSearch
         weather={weather}
-        cityName={cityName}
         setCityName={setCityName}
         fetchWeatherAPI={fetchWeatherAPI}
         storeCity={storeCity}
@@ -210,7 +210,6 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: '#CDECFC',
-    // backgroundColor: 'white',
     height: '100%',
   },
   errorInfo: {
@@ -231,6 +230,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#cccccc',
   },
   text: {
-    color: 'gray',
+    color: '#474747',
   },
 });
