@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#B1E0F8',
     paddingLeft: 24,
     paddingRight: 24,
+    paddingTop: 16,
     height: 168,
     borderWidth: 3,
     borderColor: '#afbbc5de',
@@ -143,7 +144,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: 8,
+    // paddingRight: 0,
+    paddingLeft: 74,
   },
   catShower: {
     width: 120,

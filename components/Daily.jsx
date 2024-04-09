@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {FlatList} from 'react-native';
 import {
   Image,
   StyleSheet,
@@ -9,23 +10,22 @@ import {
 } from 'react-native';
 import CatHome from '../asset/image/catHome.png';
 import CatLoadingHour from '../asset/image/drizzleCat.png';
+import {DateTime} from 'luxon';
 
 const API_KEY = 'e1f0ab9c632fe4e2fb91c68770021520';
 
-const daysOfWeek = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-];
+const offsetMinsToZoneStr = mins =>
+  `UTC${mins > 0 ? '+' : '-'}${Math.abs(Math.floor(mins / 60))}:${Math.abs(
+    mins % 60,
+  )
+    .toString()
+    .padStart(2, '0')}`;
 
 export default function Daily({navigation, data, backgroundColor}) {
   const {name, timezone} = data;
   const [listHour, setListHour] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [title, setTitle] = useState('Today');
 
   const fetchWeatherAPI = async name => {
     try {
@@ -36,6 +36,7 @@ export default function Daily({navigation, data, backgroundColor}) {
       if (res.status === 200) {
         const responseData = await res.json();
         setListHour(responseData.list);
+        console.log(responseData);
       }
 
       setLoaded(true);
@@ -122,40 +123,42 @@ export default function Daily({navigation, data, backgroundColor}) {
 
 const styles = StyleSheet.create({
   weatherContent: {
-    paddingLeft: 17,
-    paddingRight: 17,
-    paddingTop: 5,
-    // marginTop: 50,
-    // paddingTop: 50,
-    // backgroundColor: '#F5F9F9',
+    paddingLeft: 18,
+    paddingRight: 18,
+    paddingTop: 8,
     flex: 1,
     height: '100%',
   },
   dayTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#474747',
     textAlign: 'center',
     width: '100%',
+    paddingTop: 8,
   },
   hourContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'start',
-    marginTop: 7,
-    marginRight: 15,
+    paddingTopTop: 8,
+    marginRight: 16,
+    marginTop: 16,
+    marginBottom: 16,
   },
   hourDiv: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    gap: 8,
     backgroundColor: '#B5D6D6',
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 25,
-    paddingBottom: 25,
-    borderRadius: 55,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 24,
+    paddingBottom: 24,
+    borderRadius: 48,
+    width: 95,
+    height: 180,
   },
   loadingHour: {
     flexDirection: 'column',
