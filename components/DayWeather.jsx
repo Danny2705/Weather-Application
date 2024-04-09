@@ -43,7 +43,7 @@ export default function DayWeather({data}) {
 
   return (
     <View style={styles.day}>
-      <Text style={{fontSize: 24, fontWeight: 'bold', color: '#474747'}}>
+      <Text style={{fontSize: 28, fontWeight: 'bold', color: '#474747'}}>
         {currentDay.toUpperCase()}
       </Text>
       <Text style={{fontSize: 24, color: '#474747'}}>
