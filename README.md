@@ -1,4 +1,19 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🐱🌈🌤️ Cat Weather Mobile Application
+
+Let's enjoy the daily forecast with a bunch of adorable kittens. 
+CatWeather offers users weather forecasts for the hour, day, and five days ahead. User can search forecast by city, including their current location. Users will be happy and smiling for the rest of the day because to the wonderful whiskers graphical, which changes depending on the weather.
+
+## 🐱‍💻 Technology Using
+React Native, Openweathermap API, Luxon library (for Date time converting), Flatlist library
+
+## 🧁 Video final app demo: https://youtube.com/shorts/E6Rpo8cNsQ0
+## 🧁 Figma Design: https://www.figma.com/file/LMelAu8AvdTgFVx4Df36Us/Cat-Weather?type=design&node-id=0%3A1&mode=design&t=hBpqczNh91R7QkSg-1
+
+## 🧁 Developer:
+Danny Cao Dat https://github.com/Danny2705
+Jessie Chonthicha https://github.com/ChonthichaJessie 
+Edmon Hundubay https://github.com/emonhundubey
+Jesse Thomas https://github.com/Jesse25-t
 
 # Getting Started
 
