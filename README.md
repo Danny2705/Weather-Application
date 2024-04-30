@@ -4,16 +4,22 @@ Let's enjoy the daily forecast with a bunch of adorable kittens.
 CatWeather offers users weather forecasts for the hour, day, and five days ahead. User can search forecast by city, including their current location. Users will be happy and smiling for the rest of the day because to the wonderful whiskers graphical, which changes depending on the weather.
 
 ## 🐱‍💻 Technology Using
-React Native, Openweathermap API, Luxon library (for Date time converting), Flatlist library
+React Native
+Openweathermap API
+Luxon library (for Date time converting)
+Flatlist library
 
-## 🧁 Video final app demo: https://youtube.com/shorts/E6Rpo8cNsQ0
-## 🧁 Figma Design: https://www.figma.com/file/LMelAu8AvdTgFVx4Df36Us/Cat-Weather?type=design&node-id=0%3A1&mode=design&t=hBpqczNh91R7QkSg-1
+## 🧁 Video final app demo
+https://youtube.com/shorts/E6Rpo8cNsQ0
+
+## 🧁 Figma Design
+https://www.figma.com/file/LMelAu8AvdTgFVx4Df36Us/Cat-Weather?type=design&node-id=0%3A1&mode=design&t=hBpqczNh91R7QkSg-1
 
 ## 🧁 Developer:
-Danny Cao Dat https://github.com/Danny2705
-Jessie Chonthicha https://github.com/ChonthichaJessie 
-Edmon Hundubay https://github.com/emonhundubey
-Jesse Thomas https://github.com/Jesse25-t
+1. Danny Cao Dat https://github.com/Danny2705
+2. Jessie Chonthicha https://github.com/ChonthichaJessie
+3. Edmon Hundubay https://github.com/emonhundubey
+4. Jesse Thomas https://github.com/Jesse25-t
 
 # Getting Started
 
